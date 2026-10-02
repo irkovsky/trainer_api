@@ -1,0 +1,205 @@
+@baseUrl = http://127.0.0.1:8000
+
+### =====================================================
+### 1. РЕГИСТРАЦИЯ
+### =====================================================
+
+### 1.1. Регистрация клиента
+POST {{baseUrl}}/api/register/
+Content-Type: application/json
+
+{
+    "username": "eva",
+    "password": "eva12345",
+    "role": "client"
+}
+
+### 2. Регистрация админа
+POST {{baseUrl}}/api/register/
+Content-Type: application/json
+
+{
+    "username": "admin1",
+    "password": "admin1",
+    "role": "admin"
+}
+
+
+### ======================================================
+### 2. АУТЕНТИФИКАЦИЯ (JWT)
+### ======================================================
+
+### 2.1. Получить токен клиента
+# @name clientLogin
+POST {{baseUrl}}/api/token/
+Content-Type: application/json
+
+{
+    "username": "eva",
+    "password": "eva12345"
+}
+
+### 2.1. Получить токен админа
+# @name adminLogin
+POST {{baseUrl}}/api/token/
+Content-Type: application/json
+
+{
+    "username": "admin1",
+    "password": "admin1"
+}
+
+
+### 2.3. Обновить access-токен (клиент)
+POST {{baseUrl}}/api/token/refresh/
+Content-Type: application/json
+
+{
+    "refresh": "{{clientLogin.response.body.$.refresh}}"
+}
+
+
+### =====================================================
+### 3. АНАЛИЗЫ - CRUD (Клиент)
+### =====================================================
+
+### 3.1. Создать анализ
+POST {{baseUrl}}/api/analyses/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "date": "2026-09-27",
+    "title": "Общий анализ крови",
+    "data": {
+        "hemoglobin": 140,
+        "leukocytes": 6.5,
+        "erythrocytes": 4.8
+    }
+}
+
+
+### 3.2. Создать второй анализ
+POST {{baseUrl}}/api/analyses/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "date": "2026-09-27",
+    "title": "Биохимия",
+    "data": {
+        "glucose": 5.2,
+        "cholesterol": 4.8
+    }
+}
+
+
+### 3.3. Список своих анализов
+GET {{baseUrl}}/api/analyses/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+
+### 3.4. Один анализ
+GET {{baseUrl}}/api/analyses/1/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+
+### 3.5. Обновить анализ 
+PATCH {{baseUrl}}/api/analyses/1/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "title": "Общий анализ крови (обновлён)"
+}
+
+
+### 3.6. Удалить анализ
+DELETE {{baseUrl}}/api/analyses/2/
+
+
+### ============================================================
+### 4. АНАЛИЗЫ — как админ
+### ============================================================
+
+### 4.1 Список ВСЕХ анализов (админ)
+GET {{baseUrl}}/api/analyses/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### 4.2 Один анализ (админ)
+GET {{baseUrl}}/api/analyses/1/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### 4.3 Удалить чужой анализ (админ)
+DELETE {{baseUrl}}/api/analyses/1/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### ============================================================
+### 5. ПРОВЕРКА ПРАВ
+### ============================================================
+
+### 5.1 Аноним — список (401)
+GET {{baseUrl}}/api/analyses/
+
+### 5.2 Аноним — создание (401)
+POST {{baseUrl}}/api/analyses/
+Content-Type: application/json
+
+{
+    "date": "2026-09-27",
+    "title": "Тест",
+    "data": {}
+}
+
+### 5.3 Клиент удаляет чужой анализ (403 или 404)
+DELETE {{baseUrl}}/api/analyses/99/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+### 5.4 Без токена — создать (401)
+POST {{baseUrl}}/api/analyses/
+Content-Type: application/json
+
+{
+    "date": "2026-09-27",
+    "title": "Тест",
+    "data": {}
+}
+
+
+### ============================================================
+### 6. ПРОВЕРКА РЕГИСТРАЦИИ
+### ============================================================
+
+### 6.1 Дубликат username (400)
+POST {{baseUrl}}/api/register/
+Content-Type: application/json
+
+{
+    "username": "client1",
+    "password": "newpass123",
+    "role": "client"
+}
+
+### 6.2 Короткий пароль (400, если валидация)
+POST {{baseUrl}}/api/register/
+Content-Type: application/json
+
+{
+    "username": "newuser",
+    "password": "123",
+    "role": "client"
+}
+
+### ============================================================
+### 7. ПРОВЕРКА ПАГИНАЦИИ
+### ============================================================
+GET {{baseUrl}}/api/analyses/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+###
+GET {{baseUrl}}/api/analyses/?page_size=5
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+###
+GET {{baseUrl}}/api/analyses/?page=2
+Authorization: Bearer {{clientLogin.response.body.$.access}}
