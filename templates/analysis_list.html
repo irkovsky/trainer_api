@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Анализы{% endblock %}
+
+{% block content %}
+    <h1>Мои анализы</h1>
+    
+    <ul>
+        {% for analysis in analyses %}
+            <li>
+                <a href="{% url 'analysis_detail' analysis.pk %}">{{ analysis.title }}</a>
+                ({{ analysis.date }})
+            </li>
+        {% empty %}
+            <li>Пока нет анализов.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

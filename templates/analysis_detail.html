@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ analysis.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ analysis.title }}</h1>
+    
+    <p><strong>Дата:</strong> {{ analysis.date }}</p>
+    <p><strong>Автор:</strong> {{ analysis.user.username }}</p>
+    <p><strong>Создан:</strong> {{ analysis.created_at }}</p>
+    
+    <h2>Показатели</h2>
+    <ul>
+        {% for key, value in analysis.data.items %}
+            <li><strong>{{ key }}:</strong> {{ value }}</li>
+        {% empty %}
+            <li>Нет показателей</li>
+        {% endfor %}
+    </ul>
+    
+    <hr>
+    
+    <a href="{% url 'analysis_update' analysis.pk %}">Редактировать</a>
+    <a href="{% url 'analysis_delete' analysis.pk %}">Удалить</a>
+    <a href="{% url 'analysis_list' %}">← Назад к списку</a>
+{% endblock %}
