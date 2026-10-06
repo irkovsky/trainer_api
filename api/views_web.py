@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import reverse_lazy
-from .forms import AnalysisForm
+from .forms import AnalysisForm, RegisterForm
+from django.contrib.auth import login
 
 @login_required
 def analysis_list(request):
@@ -64,6 +65,32 @@ def analysis_update(request, pk):
         form = AnalysisForm(instance=analysis)
         
     return render(request, 'analysis_form.html', {'form': form})
+
+@login_required
+def analysis_delete(request, pk):
+    analysis = get_object_or_404(Analysis, pk=pk)
+    
+    if request.user != analysis.user and request.user.role != 'admin':
+            return redirect('analysis_list') 
+    
+    if request.method == 'POST':
+        analysis.delete()
+        return redirect('analysis_list')
+    else:
+        return render(request, 'analysis_confirm_delete.html', {'analysis': analysis})
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('analysis_list')
+    else:    
+        form = RegisterForm()
+        
+    return render(request, 'register.html', {'form': form})
     
 
 

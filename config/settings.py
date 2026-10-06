@@ -146,3 +146,5 @@ SIMPLE_JWT = {
 }
 
 LOGIN_REDIRECT_URL = 'analysis_list'
+
+AUTH_PASSWORD_VALIDATORS = []

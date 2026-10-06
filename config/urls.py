@@ -21,11 +21,14 @@ from api import views_web
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
+    
     path('analyses/', views_web.analysis_list, name='analysis_list'),
     path('analyses/create/', views_web.analysis_create, name='analysis_create'),
     path('analyses/<int:pk>/', views_web.analysis_detail, name='analysis_detail'),
     path('analyses/<int:pk>/update/', views_web.analysis_update, name='analysis_update'),
-    path('analyses/<int:pk>/delete/', views_web.analysis_detail, name='analysis_delete'),
+    path('analyses/<int:pk>/delete/', views_web.analysis_delete, name='analysis_delete'),
+    
+    path('register', views_web.register, name='register'),
     path('login', views_web.UserLoginView.as_view(), name='login'),
-    path('logout', views_web.UserLogoutView.as_view(), name='logout')
+    path('logout', views_web.UserLogoutView.as_view(), name='logout'),
 ]

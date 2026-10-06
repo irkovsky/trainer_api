@@ -1,5 +1,7 @@
 from .models import Analysis
 from django import forms
+from .models import User
+from django.contrib.auth.forms import UserCreationForm
 
 
 class AnalysisForm(forms.ModelForm):
@@ -12,4 +14,12 @@ class AnalysisForm(forms.ModelForm):
                 format='%Y-%m-%d',
             ),
         }
+        
+        
+class RegisterForm(UserCreationForm):
+    # password = None
+    
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'role']
         
