@@ -1,4 +1,4 @@
-from .models import Analysis
+from .models import Analysis, Workout
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -35,3 +35,10 @@ class AnalysisSerializer(serializers.ModelSerializer):
         model = Analysis
         fields = ['id', 'user', 'date', 'title', 'data', 'created_at']
         read_only_fields = ['user', 'created_at']
+      
+        
+class WorkoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workout
+        fields = ['id', 'user', 'title', 'description' ,'date', 'created_at']
+        read_only_fields = ['created_at']

@@ -4,11 +4,12 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework.routers import DefaultRouter
-from .views import RegisterView, AnalysisViewSet
+from .views import RegisterView, AnalysisViewSet, WorkoutViewSet
 
 
 router = DefaultRouter()
 router.register(r'analyses', AnalysisViewSet, basename='analysis')
+router.register(r'workouts', WorkoutViewSet, basename='workout')
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'), 

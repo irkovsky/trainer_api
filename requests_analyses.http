@@ -203,3 +203,58 @@ Authorization: Bearer {{clientLogin.response.body.$.access}}
 ###
 GET {{baseUrl}}/api/analyses/?page=2
 Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+### ============================================================
+### WORKOUTS
+### ============================================================
+
+POST {{baseUrl}}/api/workouts/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "user": 1,
+    "title": "Тренировка ног",
+    "description": "Приседания 3x10, выпады 3x12",
+    "date": "2026-10-07"
+}
+
+### Список тренировок (клиент — свои)
+GET {{baseUrl}}/api/workouts/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+### Список тренировок (админ — все)
+GET {{baseUrl}}/api/workouts/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### Одна тренировка
+GET {{baseUrl}}/api/workouts/1/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### Обновить (только админ)
+PATCH {{baseUrl}}/api/workouts/1/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "title": "фулбоди",
+    "description": " Жим ногами 3x10, Тяга верхнего блока 3x12"
+}
+
+### Удалить (только админ)
+DELETE {{baseUrl}}/api/workouts/3/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### Клиент не может создавать (403)
+POST {{baseUrl}}/api/workouts/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "user": 1,
+    "title": "Тест",
+    "description": "Тест",
+    "date": "2026-10-07"
+}
+
+### Аноним (401)
