@@ -251,10 +251,11 @@ Authorization: Bearer {{clientLogin.response.body.$.access}}
 Content-Type: application/json
 
 {
-    "user": 1,
+    "user": 2,
     "title": "Тест",
     "description": "Тест",
     "date": "2026-10-07"
 }
 
 ### Аноним (401)
+GET {{baseUrl}}/api/workouts/

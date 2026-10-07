@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ workout.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ workout.title }}</h1>
+    
+    <p><strong>Клиент:</strong> {{ workout.user.username }}</p>
+    <p><strong>Дата:</strong> {{ workout.date }}</p>
+    <p><strong>Описание:</strong></p>
+    <p>{{ workout.description|linebreaks }}</p>
+    
+    <hr>
+    
+    {% if user.role == 'admin' %}
+        <a href="{% url 'workout_update' workout.pk %}">Редактировать</a>
+        <a href="{% url 'workout_delete' workout.pk %}">Удалить</a>
+    {% endif %}
+    <a href="{% url 'workout_list' %}">← Назад к списку</a>
+{% endblock %}

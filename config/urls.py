@@ -31,4 +31,11 @@ urlpatterns = [
     path('register', views_web.register, name='register'),
     path('login', views_web.UserLoginView.as_view(), name='login'),
     path('logout', views_web.UserLogoutView.as_view(), name='logout'),
+    
+    path('workouts', views_web.workout_list, name='workout_list'),
+    path('workouts/create/', views_web.workout_create, name='workout_create'),
+    path('workouts/<int:pk>/', views_web.workout_detail, name='workout_detail'),
+    path('workouts/<int:pk>/update/', views_web.workout_update, name='workout_update'),
+    path('workouts/<int:pk>/delete/', views_web.workout_delete, name='workout_delete'),
+        
 ]

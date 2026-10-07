@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Тренировки{% endblock %}
+
+{% block content %}
+    <h1>Тренировки</h1>
+    
+    <ul>
+        {% for workout in workouts %}
+            <li>
+                <a href="{% url 'workout_detail' workout.pk %}">
+                    {{ workout.title }}
+                </a>
+                ({{ workout.date }}) — {{ workout.user.username }}
+            </li>
+        {% empty %}
+            <li>Пока нет тренировок.</li>
+        {% endfor %}
+    </ul>
+    
+    {% if user.role == 'admin' %}
+        <a href="{% url 'workout_create' %}">+ Создать тренировку</a>
+    {% endif %}
+{% endblock %}
