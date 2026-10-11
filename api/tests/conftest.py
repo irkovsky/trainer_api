@@ -28,12 +28,14 @@ def admin_user(db):
    
 
 @pytest.fixture   
-def client_api(api_client, client_user):
+def client_api(client_user):
+    api_client = APIClient()
     api_client.force_authenticate(user=client_user)
     return api_client
 
 
 @pytest.fixture
-def admin_api(api_client, admin_user):
+def admin_api(admin_user):
+    api_client = APIClient()
     api_client.force_authenticate(user=admin_user)
     return api_client

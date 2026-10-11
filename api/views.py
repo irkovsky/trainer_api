@@ -5,7 +5,7 @@ from .serializers import RegisterSerializer, AnalysisSerializer, WorkoutSerializ
 from .models import Analysis, Workout
 from .filters import AnalysisFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from .pagination import AnalysisPagination
+from .pagination import AnalysisPagination, WorkoutPagination
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .permissions import IsOwnerOrAdmin, IsAdmin
@@ -49,6 +49,7 @@ class AnalysisViewSet(viewsets.ModelViewSet):
 class WorkoutViewSet(viewsets.ModelViewSet):
     queryset = Workout.objects.all()
     serializer_class = WorkoutSerializer
+    pagination_class = WorkoutPagination
     
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
