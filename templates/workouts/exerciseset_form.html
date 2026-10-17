@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Отметить подход{% endblock %}
+
+{% block content %}
+    <h1>Отметить подход</h1>
+    
+    <p><strong>Упражнение:</strong> {{ exercise.name }}</p>
+    <p>
+        <strong>План:</strong>
+        {{ exercise.planned_sets }} подходов ×
+        {{ exercise.planned_reps }} повторений
+        {% if exercise.planned_weight %}× {{ exercise.planned_weight }} кг{% endif %}
+    </p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+    
+    <a href="{% url 'workout_detail' exercise.workout.pk %}">← Назад к тренировке</a>
+{% endblock %}

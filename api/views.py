@@ -1,8 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import viewsets
-from .serializers import RegisterSerializer, AnalysisSerializer, WorkoutSerializer
-from .models import Analysis, Workout
+from .serializers import (
+    RegisterSerializer, AnalysisSerializer, WorkoutSerializer,
+    ExerciseSerializer, ExerciseSetSerializer
+)
+from .models import Analysis, Workout, Exercise, ExerciseSet
 from .filters import AnalysisFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from .pagination import AnalysisPagination, WorkoutPagination
@@ -67,4 +70,40 @@ class WorkoutViewSet(viewsets.ModelViewSet):
             return queryset.all()
         
         return queryset.filter(user=user)
+    
+    
+class ExerciseViewSet(viewsets.ModelViewSet):
+    queryset = Exercise.objects.all()
+    serializer_class = ExerciseSerializer
+    
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), IsAdmin()]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'admin':
+            return Exercise.objects.all()
+        return Exercise.objects.filter(workout__user=user)
+
+
+class ExerciseSetViewSet(viewsets.ModelViewSet):
+    queryset = ExerciseSet.objects.all()
+    serializer_class = ExerciseSetSerializer
+    
+    def get_permissions(self):
+        return [IsAuthenticated()]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'admin':
+            return ExerciseSet.objects.all()
+        return ExerciseSet.objects.filter(user=user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        
+        
+
             

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Удалить упражнение{% endblock %}
+
+{% block content %}
+    <h1>Удалить упражнение?</h1>
+    
+    <p>Вы уверены, что хотите удалить:</p>
+    <p><strong>{{ exercise.name }}</strong></p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+        <a href="{% url 'workout_detail' exercise.workout.pk %}">Отмена</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if form.instance.pk %}Редактировать упражнение{% else %}Новое упражнение{% endif %}
+{% endblock %}
+
+{% block content %}
+    <h1>
+        {% if form.instance.pk %}Редактировать упражнение{% else %}Новое упражнение{% endif %}
+    </h1>
+    
+    <p><strong>Тренировка:</strong> {{ workout.title }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+    
+    <a href="{% url 'workout_detail' workout.pk %}">← Назад к тренировке</a>
+{% endblock %}

@@ -12,9 +12,54 @@
     
     <hr>
     
+    <h2>Упражнения</h2>
+    
     {% if user.role == 'admin' %}
-        <a href="{% url 'workout_update' workout.pk %}">Редактировать</a>
-        <a href="{% url 'workout_delete' workout.pk %}">Удалить</a>
+        <a href="{% url 'exercise_create' workout.pk %}">+ Добавить упражнение</a>
     {% endif %}
-    <a href="{% url 'workout_list' %}">← Назад к списку</a>
+    
+    {% for exercise in exercises %}
+        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+            <h3>{{ exercise.name }}</h3>
+            <p>
+                <strong>План:</strong>
+                {{ exercise.planned_sets }} × {{ exercise.planned_reps }}
+                {% if exercise.planned_weight %}× {{ exercise.planned_weight }} кг{% endif %}
+            </p>
+            
+            <h4>Подходы:</h4>
+            <ul>
+                {% for set in exercise.sets.all %}
+                    <li>
+                        Подход {{ set.set_number }}:
+                        {{ set.reps }} повторов
+                        {% if set.weight %}× {{ set.weight }} кг{% endif %}
+                        {% if set.rpe %}— RPE {{ set.rpe }}{% endif %}
+                        {% if set.note %}— «{{ set.note }}»{% endif %}
+                        
+                        {% if set.user == user %}
+                            {# <a href="{% url 'exercise_set_update' set.pk %}">✏️</a> #}
+                            <a href="{% url 'exercise_set_delete' set.pk %}">🗑️</a>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li>Подходов пока нет</li>
+                {% endfor %}
+            </ul>
+            
+            {% if user == workout.user %}
+                <a href="{% url 'exercise_set_create' exercise.pk %}">+ Отметить подход</a>
+            {% endif %}
+            
+            {% if user.role == 'admin' %}
+                <a href="{% url 'exercise_update' exercise.pk %}">Редактировать</a>
+                <a href="{% url 'exercise_delete' exercise.pk %}">Удалить</a>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>Пока нет упражнений.</p>
+    {% endfor %}
+    
+    <hr>
+    <a href="{% url 'workout_list' %}">← Назад к тренировкам</a>
 {% endblock %}

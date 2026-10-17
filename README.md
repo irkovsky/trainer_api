@@ -1,72 +1,83 @@
 # Trainer API
 
-Backend для фитнес-тренера. Клиенты загружают медицинские анализы, тренер просматривает их и отслеживает прогресс.
+Backend для фитнес-тренера: клиенты загружают медицинские анализы, тренер назначает тренировки и отслеживает прогресс.
+
+**Обновлено:** 17.10.2026
+
+---
+
+## Статус проекта
+
+### ✅ MVP №1: Анализы
+- API (DRF): CRUD, JWT, права, фильтры, пагинация
+- Веб-интерфейс: список, создание, просмотр, редактирование, удаление
+- Тесты: 14 passed, 99% покрытие
+
+### ✅ MVP №2: Тренировки
+- API: CRUD, права (только админ создаёт)
+- Веб-интерфейс: список, создание, просмотр, редактирование, удаление
+- Тесты: 5 passed
+
+### ✅ MVP №3: Прогресс по упражнениям
+- Модели `Exercise` и `ExerciseSet`
+- API: CRUD для упражнений и подходов (RPE, заметки)
+- Веб-интерфейс: упражнения внутри тренировки, отметка подходов
+- ⏳ Тесты: запланировано
+
+### 🔜 В планах
+- **MVP №4**: Динамика анализов + замеры тела (вес, обхваты)
+- **MVP №5**: AI-функции (описание анализов, голосовой ввод, чат-бот)
+- **Финализация**: деплой на VPS, домен, SSL
+
+---
 
 ## Стек
 
-- Python 3.11
-- Django 5.x
-- Django REST Framework
-- JWT (djangorestframework-simplejwt)
-- PostgreSQL / SQLite
-- django-filter
-- pytest + pytest-django
+- **Backend:** Python 3.11, Django 5.x, Django REST Framework
+- **Аутентификация:** JWT (`djangorestframework-simplejwt`) + сессии для веба
+- **База данных:** PostgreSQL (в разработке — SQLite)
+- **Фильтрация:** `django-filter`
+- **Тесты:** `pytest`, `pytest-django`, `pytest-cov`
+- **Фронтенд:** Django Templates
+- **Деплой (план):** Nginx, Gunicorn, VPS
+
+---
 
 ## Установка
 
-### 1. Клонировать репозиторий
-
 ```bash
-git clone https://github.com/username/trainer_api.git
+# 1. Клонировать репозиторий
+git clone https://github.com/<username>/trainer_api.git
 cd trainer_api
-```
 
-### 2. Создать виртуальное окружение
-
-```bash
+# 2. Виртуальное окружение
 python -m venv venv
+venv\Scripts\activate    # Windows
+# source venv/bin/activate  # Mac/Linux
 
-# Windows
-venv\Scripts\activate
-
-# Mac/Linux
-source venv/bin/activate
-```
-
-### 3. Установить зависимости
-
-```bash
+# 3. Зависимости
 pip install -r requirements.txt
-```
 
-### 4. Применить миграции
-
-```bash
+# 4. Миграции
 python manage.py migrate
-```
 
-### 5. Создать суперпользователя (опционально)
-
-```bash
+# 5. Суперпользователь
 python manage.py createsuperuser
-```
 
-### 6. Запустить сервер
-
-```bash
+# 6. Запуск
 python manage.py runserver
 ```
 
-Сервер доступен по адресу: `http://127.0.0.1:8000/`
+---
 
-## Эндпоинты
+## API-эндпоинты
 
 ### Аутентификация
 
 | Метод | URL | Описание |
 | :--- | :--- | :--- |
-| POST | `/api/register/` | Регистрация нового пользователя |
-| POST | `/api/token/` | Получить JWT-токен (access + refresh) |
+| POST | `/api/register/` | Регистрация |
+| POST | `/api/token/` | Получить JWT-токен |
 | POST | `/api/token/refresh/` | Обновить access-токен |
 
 ### Анализы
@@ -75,84 +86,90 @@ python manage.py runserver
 | :--- | :--- | :--- |
 | GET | `/api/analyses/` | Список анализов |
 | POST | `/api/analyses/` | Создать анализ |
-| GET | `/api/analyses/{id}/` | Получить один анализ |
-| PATCH | `/api/analyses/{id}/` | Обновить анализ |
-| DELETE | `/api/analyses/{id}/` | Удалить анализ |
+| GET | `/api/analyses/{id}/` | Один анализ |
+| PATCH | `/api/analyses/{id}/` | Обновить |
+| DELETE | `/api/analyses/{id}/` | Удалить |
+
+### Тренировки
+
+| Метод | URL | Описание |
+| :--- | :--- | :--- |
+| GET | `/api/workouts/` | Список тренировок |
+| POST | `/api/workouts/` | Создать тренировку (админ) |
+| GET | `/api/workouts/{id}/` | Одна тренировка |
+| PATCH | `/api/workouts/{id}/` | Обновить (админ) |
+| DELETE | `/api/workouts/{id}/` | Удалить (админ) |
+
+### Упражнения
+
+| Метод | URL | Описание |
+| :--- | :--- | :--- |
+| GET | `/api/exercises/` | Список упражнений |
+| POST | `/api/exercises/` | Создать упражнение (админ) |
+| GET | `/api/exercises/{id}/` | Одно упражнение |
+| PATCH | `/api/exercises/{id}/` | Обновить (админ) |
+| DELETE | `/api/exercises/{id}/` | Удалить (админ) |
+
+### Подходы
+
+| Метод | URL | Описание |
+| :--- | :--- | :--- |
+| GET | `/api/exercise-sets/` | Список подходов |
+| POST | `/api/exercise-sets/` | Отметить подход |
+| GET | `/api/exercise-sets/{id}/` | Один подход |
+| PATCH | `/api/exercise-sets/{id}/` | Обновить |
+| DELETE | `/api/exercise-sets/{id}/` | Удалить |
 
 ### Фильтры и пагинация
 
-```
-GET /api/analyses/?date_after=2026-01-01&date_before=2026-12-31
-GET /api/analyses/?title=кровь
-GET /api/analyses/?page=1&page_size=10
-```
+- `?search=...` — поиск по названию/описанию
+- `?status=OPEN` — фильтр по статусу (для анализов)
+- `?date_after=YYYY-MM-DD&date_before=YYYY-MM-DD` — диапазон дат
+- `?page=1&page_size=10` — пагинация
 
-## Роли и права
+---
 
-| Роль | Что может |
+## Веб-страницы
+
+| URL | Описание |
 | :--- | :--- |
-| **client** | Создавать анализы, видеть только свои |
-| **admin** | Видеть все анализы, удалять любые |
+| `/register/` | Регистрация |
+| `/login/` | Логин |
+| `/logout/` | Выход |
+| `/analyses/` | Список анализов |
+| `/analyses/create/` | Создание анализа |
+| `/analyses/<pk>/` | Просмотр анализа |
+| `/analyses/<pk>/update/` | Редактирование |
+| `/analyses/<pk>/delete/` | Удаление |
+| `/workouts/` | Список тренировок |
+| `/workouts/create/` | Создание тренировки |
+| `/workouts/<pk>/` | Просмотр тренировки + упражнения |
+| `/workouts/<pk>/update/` | Редактирование |
+| `/workouts/<pk>/delete/` | Удаление |
+| `/workouts/<workout_pk>/exercises/create/` | Создание упражнения |
+| `/exercises/<pk>/update/` | Редактирование упражнения |
+| `/exercises/<pk>/delete/` | Удаление упражнения |
+| `/exercises/<exercise_pk>/sets/create/` | Отметка подхода |
+| `/exercise-sets/<pk>/delete/` | Удаление подхода |
 
-## Примеры запросов
-
-### Регистрация
-
-```http
-POST /api/register/
-Content-Type: application/json
-
-{
-    "username": "client1",
-    "password": "client12345",
-    "role": "client"
-}
-```
-
-### Получить токен
-
-```http
-POST /api/token/
-Content-Type: application/json
-
-{
-    "username": "client1",
-    "password": "client12345"
-}
-```
-
-### Создать анализ
-
-```http
-POST /api/analyses/
-Authorization: Bearer <access_token>
-Content-Type: application/json
-
-{
-    "date": "2026-10-02",
-    "title": "Общий анализ крови",
-    "data": {
-        "hemoglobin": 140,
-        "leukocytes": 6.5
-    }
-}
-```
+---
 
 ## Тесты
 
-Запуск тестов:
-
 ```bash
+# Все тесты
 pytest
-```
 
-Запуск с покрытием:
-
-```bash
+# Покрытие
 pytest --cov=api --cov-report=term-missing
+
+# Только workouts
+pytest api/tests/test_workouts.py -v
 ```
 
-**Текущее покрытие:** 99%.
+**Покрытие:** 99% (MVP №1), 5 тестов для тренировок. Тесты для MVP №3 — в планах.
+
+---
 
 ## Структура проекта
 
@@ -162,24 +179,35 @@ trainer_api/
 │   ├── migrations/
 │   ├── tests/
 │   │   ├── conftest.py
-│   │   ├── test_auth.py
 │   │   ├── test_analyses.py
-│   │   └── test_permissions.py
-│   ├── admin.py
+│   │   ├── test_auth.py
+│   │   ├── test_permissions.py
+│   │   └── test_workouts.py
 │   ├── filters.py
+│   ├── forms.py
 │   ├── models.py
 │   ├── pagination.py
 │   ├── permissions.py
 │   ├── serializers.py
 │   ├── urls.py
-│   └── views.py
+│   ├── views.py
+│   └── views_web.py
 ├── config/
 │   ├── settings.py
 │   └── urls.py
-├── pytest.ini
+├── templates/
+│   ├── base.html
+│   ├── analyses/
+│   ├── auth/
+│   └── workouts/
+├── .gitignore
 ├── manage.py
+├── pytest.ini
+├── README.md
 └── requirements.txt
 ```
+
+---
 
 ## Лицензия
 

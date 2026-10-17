@@ -1,0 +1,108 @@
+[
+  {
+    "model": "api.exercise",
+    "pk": 1,
+    "fields": {
+      "workout": 1,
+      "name": "Приседания",
+      "order": 1,
+      "planned_sets": 3,
+      "planned_reps": 10,
+      "planned_weight": 60.0
+    }
+  },
+  {
+    "model": "api.exercise",
+    "pk": 2,
+    "fields": {
+      "workout": 1,
+      "name": "Жим лёжа",
+      "order": 2,
+      "planned_sets": 3,
+      "planned_reps": 8,
+      "planned_weight": 50.0
+    }
+  },
+  {
+    "model": "api.exercise",
+    "pk": 3,
+    "fields": {
+      "workout": 1,
+      "name": "Становая тяга",
+      "order": 3,
+      "planned_sets": 4,
+      "planned_reps": 6,
+      "planned_weight": 80.0
+    }
+  },
+  {
+    "model": "api.exerciseset",
+    "pk": 1,
+    "fields": {
+      "exercise": 1,
+      "user": 2,
+      "set_number": 1,
+      "reps": 10,
+      "weight": 60.0,
+      "rpe": 7,
+      "note": "Первые два подхода легко",
+      "completed_at": "2026-10-14T15:00:00Z"
+    }
+  },
+  {
+    "model": "api.exerciseset",
+    "pk": 2,
+    "fields": {
+      "exercise": 1,
+      "user": 2,
+      "set_number": 2,
+      "reps": 10,
+      "weight": 60.0,
+      "rpe": 8,
+      "note": "",
+      "completed_at": "2026-10-14T15:05:00Z"
+    }
+  },
+  {
+    "model": "api.exerciseset",
+    "pk": 3,
+    "fields": {
+      "exercise": 1,
+      "user": 2,
+      "set_number": 3,
+      "reps": 8,
+      "weight": 55.0,
+      "rpe": 9,
+      "note": "Снизил вес, тяжело",
+      "completed_at": "2026-10-14T15:10:00Z"
+    }
+  },
+  {
+    "model": "api.exerciseset",
+    "pk": 4,
+    "fields": {
+      "exercise": 2,
+      "user": 2,
+      "set_number": 1,
+      "reps": 8,
+      "weight": 50.0,
+      "rpe": 7,
+      "note": "",
+      "completed_at": "2026-10-14T15:20:00Z"
+    }
+  },
+  {
+    "model": "api.exerciseset",
+    "pk": 5,
+    "fields": {
+      "exercise": 2,
+      "user": 2,
+      "set_number": 2,
+      "reps": 8,
+      "weight": 50.0,
+      "rpe": 8,
+      "note": "",
+      "completed_at": "2026-10-14T15:25:00Z"
+    }
+  }
+]

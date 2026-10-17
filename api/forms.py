@@ -1,4 +1,4 @@
-from .models import Analysis, Workout
+from .models import Analysis, Workout, ExerciseSet, Exercise
 from django import forms
 from .models import User
 from django.contrib.auth.forms import UserCreationForm
@@ -34,4 +34,15 @@ class WorkoutForm(forms.ModelForm):
                 format='%Y-%m-%d',
             ),
         }
+        
+        
+class ExerciseForm(forms.ModelForm):
+    class Meta:
+        model = Exercise
+        fields = ['name', 'order', 'planned_sets', 'planned_reps', 'planned_weight']
+        
+class ExerciseSetForm(forms.ModelForm):
+    class Meta:
+        model = ExerciseSet
+        fields = ['set_number', 'reps', 'weight', 'rpe', 'note']
         

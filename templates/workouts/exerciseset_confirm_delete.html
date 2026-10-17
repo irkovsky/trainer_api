@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Удалить подход{% endblock %}
+
+{% block content %}
+    <h1>Удалить подход?</h1>
+    
+    <p>Вы уверены, что хотите удалить:</p>
+    <p>
+        <strong>{{ exercise_set.exercise.name }}</strong> —
+        Подход {{ exercise_set.set_number }}:
+        {{ exercise_set.reps }} повт.
+        {% if exercise_set.weight %}× {{ exercise_set.weight }} кг{% endif %}
+    </p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+        <a href="{% url 'workout_detail' exercise_set.exercise.workout.pk %}">Отмена</a>
+    </form>
+{% endblock %}

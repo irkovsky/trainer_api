@@ -1,0 +1,136 @@
+@baseUrl = http://127.0.0.1:8000
+
+###
+# @name clientLogin
+POST {{baseUrl}}/api/token/
+Content-Type: application/json
+
+{
+    "username": "eva",
+    "password": "eva12345"
+}
+
+###
+# @name adminLogin
+POST {{baseUrl}}/api/token/
+Content-Type: application/json
+
+{
+    "username": "admin1",
+    "password": "admin1"
+}
+### ============================================================
+### 7. УПРАЖНЕНИЯ (EXERCISES)
+### ============================================================
+
+### 7.1 Создать упражнение (админ)
+POST {{baseUrl}}/api/exercises/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "workout": 1,
+    "name": "Жим стоя",
+    "order": 4,
+    "planned_sets": 3,
+    "planned_reps": 10,
+    "planned_weight": 40
+}
+
+### 7.2 Создать упражнение клиентом (403)
+POST {{baseUrl}}/api/exercises/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "workout": 1,
+    "name": "Попытка",
+    "order": 5,
+    "planned_sets": 3,
+    "planned_reps": 10
+}
+
+### 7.3 Список упражнений (админ)
+GET {{baseUrl}}/api/exercises/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### 7.4 Список упражнений (клиент — только свои)
+GET {{baseUrl}}/api/exercises/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+### 7.5 Одно упражнение (админ)
+GET {{baseUrl}}/api/exercises/1/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### 7.6 Обновить упражнение (админ)
+PATCH {{baseUrl}}/api/exercises/1/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "planned_sets": 4
+}
+
+### 7.7 Удалить упражнение (админ)
+DELETE {{baseUrl}}/api/exercises/3/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### ============================================================
+### 8. ПОДХОДЫ (EXERCISE SETS)
+### ============================================================
+
+### 8.1 Клиент отмечает подход 1
+POST {{baseUrl}}/api/exercise-sets/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "exercise": 1,
+    "set_number": 1,
+    "reps": 10,
+    "weight": 60,
+    "rpe": 8,
+    "note": "Легко"
+}
+
+### 8.2 Клиент отмечает подход 2
+POST {{baseUrl}}/api/exercise-sets/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "exercise": 1,
+    "set_number": 2,
+    "reps": 10,
+    "weight": 60,
+    "rpe": 8
+}
+
+### 8.3 Клиент отмечает подход 3 (снизил вес)
+POST {{baseUrl}}/api/exercise-sets/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+Content-Type: application/json
+
+{
+    "exercise": 1,
+    "set_number": 3,
+    "reps": 8,
+    "weight": 55,
+    "rpe": 9,
+    "note": "Снизил вес"
+}
+
+### 8.4 Список подходов (клиент — свои)
+GET {{baseUrl}}/api/exercise-sets/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+### 8.5 Список подходов (админ — все)
+GET {{baseUrl}}/api/exercise-sets/
+Authorization: Bearer {{adminLogin.response.body.$.access}}
+
+### 8.6 Тренировка с упражнениями и подходами
+GET {{baseUrl}}/api/workouts/1/
+Authorization: Bearer {{clientLogin.response.body.$.access}}
+
+### 8.7 Аноним — доступ запрещён (401)
+GET {{baseUrl}}/api/exercise-sets/
